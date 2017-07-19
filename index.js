@@ -1,9 +1,13 @@
+'use strict';
+
 var path = require('path');
 var bodyParser = require('body-parser');
 
 var repo = require('./repo');
 var express = require('express')
 var app = express()
+var md5 = require('md5');
+var commentValidator = require('./comment-validator');
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -18,8 +22,19 @@ app.get('/comments/all', function (req, res) {
 });
 
 app.post('/comments/new', function(req, res) {
-  // we don't really do anything with this comment, just return it to the client
-  res.json(req.body);
+  var comment = req.body;
+  var commentError = commentValidator.validateComment(comment);
+  if(!commentError){
+    comment.created = new Date();
+    comment.avatar = 'https://s.gravatar.com/avatar/' + md5(comment.email) + '?r=r';
+    repo.add(comment);
+    res.json(comment);
+  } else {
+    res.status(400).json({
+      error: commentError
+    });
+  }
+
 });
 
 app.listen(3000, function () {

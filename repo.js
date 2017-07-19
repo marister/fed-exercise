@@ -23,5 +23,8 @@ var comments = [
 ];
 
 module.exports = {
-  all: comments
+  all: comments,
+  add: function(comment){
+    comments.unshift(comment);
+  }
 };

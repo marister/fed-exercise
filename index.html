@@ -1,13 +1,43 @@
 <html>
 <head>
-  <title>Logz.io js interview exercise</title>
+    <title>Logz.io js interview exercise</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+    <script src="main.js" type="text/javascript"></script>
+    <script src="comments-api.js" type="text/javascript"></script>
 
-  <script src="main.js" type="text/javascript"></script>
-
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body ng-app="fedExercise" ng-controller="MainController">
 
-  Hello world! :)
+<div class="vbox">
+    <input type="email" placeholder="Email Address" ng-model="comment.email" class="margin">
+    <textarea placeholder="Comment.." name="comment-body" ng-model="comment.text" cols="30" rows="10" class="margin"></textarea>
+    <div class="right">
+        <button ng-disabled="addCommentLoading" ng-click="addComment()" class="margin btn">Submit</button>
+    </div>
+</div>
+
+<hr class="sep">
+
+<input ng-model="filterText" type="text" placeholder="Filter comments">
+
+<div ng-repeat="comment in comments | filter:filterText" class="hbox comment">
+
+    <div class="flex-item">
+        <img ng-src="{{comment.avatar}}" alt="" class="avatar">
+    </div>
+
+    <div class="flex-item vbox">
+        <div>
+            {{comment.email}} <span class="title-date">{{getDate(comment.created)}}</span>
+        </div>
+
+        <div>
+            {{comment.text}}
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
